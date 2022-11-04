@@ -1,4 +1,4 @@
-import requests
+from pip._vendor import requests
 import time
 def load_site():
     global site_latest, site_next, site_upcoming
@@ -33,7 +33,7 @@ def load_site():
 
 def latest_launch(info_to_get="name", number=0):
     global site_latest, site_next, site_upcoming
-    return site_latest["results"][number]["mission"][info_to_get]
+    return site_latest["results"][number][info_to_get]
 def next_launch(info_to_get="details", number=0):
     global site_latest, site_next, site_upcoming
     return site_next["results"][number]["mission"][info_to_get]
@@ -45,4 +45,4 @@ def next_launch_meta(info_to_get="net", number=0):
 #     return site_next["cores"][info_to_get]
 def get_more_launches(info_to_get="name", number=1):
     global site_latest, site_next, site_upcoming
-    return site_upcoming["results"][number][info_to_get]
+    return site_upcoming["results"][number]["mission"][info_to_get]

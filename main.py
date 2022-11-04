@@ -7,6 +7,7 @@ from PIL import Image, ImageDraw, ImageFont
 import calendar
 import os
 import ast
+import dateutil.parser as dp # Need to run `pip install python-dateutil`
 
 MINUTES = 15  # Define The amount of time to wait in the loop
 
@@ -43,6 +44,12 @@ while True:
     current_date = datetime.utcnow()
     unixtime = calendar.timegm(current_date.utctimetuple())  # Saving the current Unix Time
 
+    unix_time_last_launch = dp.parse(unix_time_last_launch)
+    unix_time_last_launch = unix_time_last_launch.strftime('%s')
+
+    launch_time = dp.parse(launch_time)
+    launch_time = launch_time.strftime('%s')
+
     UNIX_START = unix_time_last_launch
     UNIX_NOW = unixtime                         # Defining the 3 important Unix-Timestamps (last flight, current time, next flight)
     UNIX_STOP = launch_time
@@ -52,7 +59,6 @@ while True:
     font_7 = ImageFont.truetype(os.path.join("font.ttf"), size=7)
     font_10 = ImageFont.truetype(os.path.join("font.ttf"), size=10)
     font = ImageFont.truetype(os.path.join("font.ttf"), size=15)
-
 
     try:                                                    # Converting Unix Time in a readable format
         time_left = int(launch_time) - int(unixtime)
@@ -127,7 +133,7 @@ while True:
 
 
     full_spacex_x = Image.open("spacex.png")  # Here we open/load the SpaceX logo (You can Download this Image in my GitHub Repo.)
-    full_spacex_x_redpart = full_spacex_x.crop((0, 0, calculate_percentage(UNIX_START, UNIX_NOW, UNIX_STOP), 24))   # Crops the SpaceX logo using the "calculate_percentage" function
+    full_spacex_x_redpart = full_spacex_x.crop((0, 0, calculate_percentage(int(UNIX_START), int(UNIX_NOW), int(UNIX_STOP)), 24))   # Crops the SpaceX logo using the "calculate_percentage" function
 
     image.paste(full_spacex_x, (156, 69))
     red_image.paste(full_spacex_x_redpart, (156, 69))  # This fills the cropped part with red

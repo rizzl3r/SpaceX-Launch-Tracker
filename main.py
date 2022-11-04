@@ -34,9 +34,9 @@ while True:
 
     ### GETTING DATA ###
     mission_name = api.next_launch("name")    # This Gets the name of the Next mission
-    launch_time = api.next_launch("date_unix")   # And this will scrape the time of the launch in Unix Time
-    unix_time_last_launch = api.latest_launch("date_unix")   # Gives the Unix Time of the last launch
-    flight_number = api.next_launch("flight_number")   # The number of the launch
+    launch_time = api.next_launch_meta("net", 0)   # And this will scrape the time of the launch in Unix Time
+    unix_time_last_launch = api.latest_launch("net", 0)   # Gives the Unix Time of the last launch
+    flight_number = api.next_launch_meta("agency_launch_attempt_count")   # The number of the launch
     next_launch = api.get_more_launches("name", 1)  # will return The launch after the next launch
     ###             ###
 
@@ -91,10 +91,10 @@ while True:
     ###                      ###
 
 
-    core = api.next_launch("cores")  # Parsing a Dictionary with important data from the SpaceX api
-    core = str(core[-1:])      # Removing a '"' from the beginning and end of the String
-    core = str(core[1:][:-1])
-    core_dict = ast.literal_eval(core)  # Converting the Parsed string to Python Dictionary (Not the most Pythonic way!)
+    # core = api.next_launch("cores")  # Parsing a Dictionary with important data from the SpaceX api
+    # core = str(core[-1:])      # Removing a '"' from the beginning and end of the String
+    # core = str(core[1:][:-1])
+    # core_dict = ast.literal_eval(core)  # Converting the Parsed string to Python Dictionary (Not the most Pythonic way!)
 
     t = time.localtime()                              # Receiving the time in the Hour:Minute:Second Format
     current_time = time.strftime("%H:%M:%S", t)
@@ -104,24 +104,24 @@ while True:
     draw.text((172, 45), f"{time_text}", 0, font_10, anchor="md")   # Drawing the time on the black Image
     draw.text((0, 0), str(current_time), 0, font_10)  # Drawing the current time in the upper right corner so we can see if the display updated.
 
-    if core_dict["landing_attempt"] == True:
-        draw.text((5, 62), f"Landing: Yes", 0, font_9)  # If the Rocket attemts to land
-    elif core_dict["landing_attempt"] == None:
-        red_draw.text((55, 62), f"?", 0, font_9)
-        draw.text((5, 62), "Landing: ", 0, font_9)
-    else:
-        red_draw.text((55, 62), f"No", 0, font_9) # If the Rocket won't land, the Text will get displayed in red!
-        draw.text((5, 62), f"Landing: ", 0, font_9)
+    # if core_dict["landing_attempt"] == True:
+    #     draw.text((5, 62), f"Landing: Yes", 0, font_9)  # If the Rocket attemts to land
+    # elif core_dict["landing_attempt"] == None:
+    #     red_draw.text((55, 62), f"?", 0, font_9)
+    #     draw.text((5, 62), "Landing: ", 0, font_9)
+    # else:
+    #     red_draw.text((55, 62), f"No", 0, font_9) # If the Rocket won't land, the Text will get displayed in red!
+    #     draw.text((5, 62), f"Landing: ", 0, font_9)
 
 
-    if core_dict["reused"] == True:
-        draw.text((5, 72), f"Reused: Yes", 0, font_9)  # If the Booster is reused
-    elif core_dict["reused"] == None:
-        red_draw.text((55, 72), f"?", 0, font_9)
-        draw.text((5, 72), f"Reused: ", 0, font_9)
-    else:
-        red_draw.text((55, 72), f"No", 0, font_9)
-        draw.text((5, 72), f"Reused: ", 0, font_9)
+    # if core_dict["reused"] == True:
+    #     draw.text((5, 72), f"Reused: Yes", 0, font_9)  # If the Booster is reused
+    # elif core_dict["reused"] == None:
+    #     red_draw.text((55, 72), f"?", 0, font_9)
+    #     draw.text((5, 72), f"Reused: ", 0, font_9)
+    # else:
+    #     red_draw.text((55, 72), f"No", 0, font_9)
+    #     draw.text((5, 72), f"Reused: ", 0, font_9)
 
     draw.text((5, 82), f"Next: {_2_launch}", 0, font_9)  # And this will draw the next launch on the Image
 
@@ -132,8 +132,8 @@ while True:
     image.paste(full_spacex_x, (156, 69))
     red_image.paste(full_spacex_x_redpart, (156, 69))  # This fills the cropped part with red
 
-    image = image.rotate(angle=180)
-    red_image = red_image.rotate(angle=180)
+    # image = image.rotate(angle=180)
+    # red_image = red_image.rotate(angle=180)
 
     display.init()
     display.Clear() # Clearing the display

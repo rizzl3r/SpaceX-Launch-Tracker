@@ -39,6 +39,8 @@ while True:
     unix_time_last_launch = api.latest_launch("net", 0)   # Gives the Unix Time of the last launch
     flight_number = api.next_launch_meta("agency_launch_attempt_count")   # The number of the launch
     next_launch = api.get_more_launches("name", 1)  # will return The launch after the next launch
+    launch_location = api.next_launch_location("name", 0)
+    launch_pad = api.next_launch_pad("name", 0)
     ###             ###
 
     current_date = datetime.utcnow()
@@ -109,6 +111,8 @@ while True:
     red_draw.text((209 - len(next_mission_name) * 5, 30), next_mission_name, 0, font, align="left", anchor="md") # Drawing Mission-name on Red image
     draw.text((172, 45), f"{time_text}", 0, font_10, anchor="md")   # Drawing the time on the black Image
     draw.text((0, 0), str(current_time), 0, font_10)  # Drawing the current time in the upper right corner so we can see if the display updated.
+    draw.text((5, 62), f"Location: {launch_location}", 0, font_9)  # Needs trimming! Underlaps the logo
+    draw.text((5, 72), f"Pad: {launch_pad}", 0, font_9) # Needs trimming! Underlaps the logo
 
     # if core_dict["landing_attempt"] == True:
     #     draw.text((5, 62), f"Landing: Yes", 0, font_9)  # If the Rocket attemts to land
@@ -138,7 +142,7 @@ while True:
     image.paste(full_spacex_x, (156, 69))
     red_image.paste(full_spacex_x_redpart, (156, 69))  # This fills the cropped part with red
 
-    # image = image.rotate(angle=180)
+    # image = image.rotate(angle=180) # I removed the rotate so that I could 3d print this stand: https://www.printables.com/model/7260-raspberry-pi-zero-stand
     # red_image = red_image.rotate(angle=180)
 
     display.init()

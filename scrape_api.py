@@ -46,3 +46,9 @@ def next_launch_meta(info_to_get="net", number=0):
 def get_more_launches(info_to_get="name", number=1):
     global site_latest, site_next, site_upcoming
     return site_upcoming["results"][number]["mission"][info_to_get]
+def next_launch_location(info_to_get="name", number=0):
+    global site_latest, site_next, site_upcoming
+    return site_next["results"][number]["pad"]["location"][info_to_get]
+def next_launch_pad(info_to_get="name", number=0):
+    global site_latest, site_next, site_upcoming
+    return site_next["results"][number]["pad"][info_to_get]

@@ -96,6 +96,8 @@ while True:
     _2_launch = re.sub("\([^>]+\)", "", next_launch)
     if _2_launch[-1] == " ":
         _2_launch = _2_launch[:-1]
+
+    launch_location = launch_location.split(',', 1)[0] ## Turns "Cape Canaveral, Fl, USA" into just "Cape Canaveral"
     ###                      ###
 
 

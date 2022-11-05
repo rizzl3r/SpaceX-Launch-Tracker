@@ -6,6 +6,10 @@ Install PIL library:
 ```bash
 python3 -m pip install Pillow
 ```
+Install dateutil library:
+```bash
+pip install python-dateutil
+```
 Also, you need to enable SPI in your raspi-config:
 ```bash
 sudo raspi-config
@@ -29,10 +33,10 @@ This code uses the Pillow library to create the image which will be shown on the
 
 The Display show all important informations about the next launch like these:
 
-- Name of the next rocket (and the rocket after that)
-- If it lands
-- If it was reused
-- how often it was reused
+- Name of the next mission
+- Name of the mission after that
+- Launch location
+- Launch pad
 - when the rocket will launch
 - The time the display refreshed itself
 - The SpaceX logo works as a "Progress Bar" (Left side of X=Last launch, Right side= next launch, edge between red/black = current time) 

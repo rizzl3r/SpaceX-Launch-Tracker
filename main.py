@@ -18,7 +18,10 @@ display.init()  # Initializing and Clearing the display [epd2in13b_v3.EPD()]
 display.Clear()
 
 def calculate_percentage(start, current, end, image_x=50):    # This is a function which will calcute how many Pixels of the X need to be red
-    x = (current - start) / (end - start)
+    if (end - start) > 0: 
+        x = (current - start) / (end - start)    
+    else:
+        x = 1
     return int(round(image_x/100*x*100))
 
 while True:

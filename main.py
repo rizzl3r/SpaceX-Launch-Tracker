@@ -18,7 +18,10 @@ display.init()  # Initializing and Clearing the display [epd2in13b_v3.EPD()]
 display.Clear()
 
 def calculate_percentage(start, current, end, image_x=50):    # This is a function which will calcute how many Pixels of the X need to be red
-    x = (current - start) / (end - start)
+    if (end - start) > 0: 
+        x = (current - start) / (end - start)    
+    else:
+        x = 1
     return int(round(image_x/100*x*100))
 
 while True:
@@ -56,11 +59,17 @@ while True:
     UNIX_NOW = unixtime                         # Defining the 3 important Unix-Timestamps (last flight, current time, next flight)
     UNIX_STOP = launch_time
 
-    font_9 = ImageFont.truetype(os.path.join("font.ttf"), size=9)   # Creating multiple font-sizes using the Pillow (PIL) module
-    font_8 = ImageFont.truetype(os.path.join("font.ttf"), size=8)
-    font_7 = ImageFont.truetype(os.path.join("font.ttf"), size=7)
-    font_10 = ImageFont.truetype(os.path.join("font.ttf"), size=10)
-    font = ImageFont.truetype(os.path.join("font.ttf"), size=15)
+
+    # I Believe that only font_9 may be used.
+    # Updated the code to use os.path.dirname of __file__ because this seemed to make it more acceptable to run inside other scripts, such as a kiosk like I was doing
+    #font_9 = ImageFont.truetype(os.path.join("font.ttf"), size=9)   # Creating multiple font-sizes using the Pillow (PIL) module
+    full_path = os.path.join(os.path.dirname(__file__),"font.tff")
+    print(full_path)
+    font_9 = ImageFont.truetype(full_path, size=9)
+    font_8 = ImageFont.truetype(full_path, size=8)
+    font_7 = ImageFont.truetype(full_path, size=7)
+    font_10 = ImageFont.truetype(full_path, size=10)
+    font = ImageFont.truetype(full_path, size=15)
 
     try:                                                    # Converting Unix Time in a readable format
         time_left = int(launch_time) - int(unixtime)
@@ -137,8 +146,8 @@ while True:
 
     draw.text((5, 82), f"Next: {_2_launch}", 0, font_9)  # And this will draw the next launch on the Image
 
-
-    full_spacex_x = Image.open("spacex.png")  # Here we open/load the SpaceX logo (You can Download this Image in my GitHub Repo.)
+    relative_image = os.path.join(os.path.dirname(__file__),"spacex.png")
+    full_spacex_x = Image.open(relative_image)  # Here we open/load the SpaceX logo (You can Download this Image in my GitHub Repo.)
     full_spacex_x_redpart = full_spacex_x.crop((0, 0, calculate_percentage(int(UNIX_START), int(UNIX_NOW), int(UNIX_STOP)), 24))   # Crops the SpaceX logo using the "calculate_percentage" function
 
     image.paste(full_spacex_x, (156, 69))

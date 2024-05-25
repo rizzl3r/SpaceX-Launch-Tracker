@@ -35,30 +35,26 @@ while True:
             time.sleep(60)
             received_page = False
 
-
     ### GETTING DATA ###
     mission_name = api.next_launch("name")    # This Gets the name of the Next mission
     launch_time = api.next_launch_meta("net", 0)   # And this will scrape the time of the launch in Unix Time
-    unix_time_last_launch = api.latest_launch("net", 0)   # Gives the Unix Time of the last launch
+    time_last_launch = api.latest_launch("net", 0)   # Gives the Unix Time of the last launch
     flight_number = api.next_launch_meta("agency_launch_attempt_count")   # The number of the launch
     next_launch = api.get_more_launches("name", 1)  # will return The launch after the next launch
     launch_location = api.next_launch_location("name", 0)
     launch_pad = api.next_launch_pad("name", 0)
     ###             ###
 
-    current_date = datetime.utcnow()
-    unixtime = calendar.timegm(current_date.utctimetuple())  # Saving the current Unix Time
-
-    unix_time_last_launch = dp.parse(unix_time_last_launch)
-    unix_time_last_launch = unix_time_last_launch.strftime('%s')
-
-    launch_time = dp.parse(launch_time)
-    launch_time = launch_time.strftime('%s')
+    # current_date = datetime.utcnow()
+    # unixtime = calendar.timegm(current_date.utctimetuple())  # Saving the current Unix Time
+    unix_time_now =  int(time.time())
+    unix_time_last_launch = int(dp.parse(time_last_launch).timestamp())
+    # launch_time = launch_time.strftime('%s') # '%s' will convert to epoch in linux only.... https://stackoverflow.com/questions/41607854/python-the-code-strftimes-errors
+    unix_launch_time = int(dp.parse(launch_time).timestamp())
 
     UNIX_START = unix_time_last_launch
-    UNIX_NOW = unixtime                         # Defining the 3 important Unix-Timestamps (last flight, current time, next flight)
-    UNIX_STOP = launch_time
-
+    UNIX_NOW = unix_time_now                         # Defining the 3 important Unix-Timestamps (last flight, current time, next flight)
+    UNIX_STOP = unix_launch_time
 
     # I Believe that only font_9 may be used.
     # Updated the code to use os.path.dirname of __file__ because this seemed to make it more acceptable to run inside other scripts, such as a kiosk like I was doing
@@ -72,7 +68,7 @@ while True:
     font = ImageFont.truetype(full_path, size=15)
 
     try:                                                    # Converting Unix Time in a readable format
-        time_left = int(launch_time) - int(unixtime)
+        time_left = int(unix_launch_time) - int(unix_time_now)
         if time_left > 86400:
             time_text = f"{round(time_left / 86400)} Days"
         elif time_left > 3600:
@@ -87,7 +83,6 @@ while True:
 
     white_spaces = " " * (10 - len(time_text))     # Adding whitespaces in front of the Text so that the text is on the left side
     time_text = f"{white_spaces}{time_text}"
-
 
     w = display.height  # Receiving Display High/Width
     h = display.width
@@ -107,9 +102,6 @@ while True:
         _2_launch = _2_launch[:-1]
 
     launch_location = launch_location.split(',', 1)[0] ## Turns "Cape Canaveral, Fl, USA" into just "Cape Canaveral"
-    ###                      ###
-
-
     # core = api.next_launch("cores")  # Parsing a Dictionary with important data from the SpaceX api
     # core = str(core[-1:])      # Removing a '"' from the beginning and end of the String
     # core = str(core[1:][:-1])
@@ -124,26 +116,6 @@ while True:
     draw.text((0, 0), str(current_time), 0, font_10)  # Drawing the current time in the upper right corner so we can see if the display updated.
     draw.text((5, 62), f"Location: {launch_location}", 0, font_9)  # Needs trimming! Underlaps the logo
     draw.text((5, 72), f"Pad: {launch_pad}", 0, font_9) # Needs trimming! Underlaps the logo
-
-    # if core_dict["landing_attempt"] == True:
-    #     draw.text((5, 62), f"Landing: Yes", 0, font_9)  # If the Rocket attemts to land
-    # elif core_dict["landing_attempt"] == None:
-    #     red_draw.text((55, 62), f"?", 0, font_9)
-    #     draw.text((5, 62), "Landing: ", 0, font_9)
-    # else:
-    #     red_draw.text((55, 62), f"No", 0, font_9) # If the Rocket won't land, the Text will get displayed in red!
-    #     draw.text((5, 62), f"Landing: ", 0, font_9)
-
-
-    # if core_dict["reused"] == True:
-    #     draw.text((5, 72), f"Reused: Yes", 0, font_9)  # If the Booster is reused
-    # elif core_dict["reused"] == None:
-    #     red_draw.text((55, 72), f"?", 0, font_9)
-    #     draw.text((5, 72), f"Reused: ", 0, font_9)
-    # else:
-    #     red_draw.text((55, 72), f"No", 0, font_9)
-    #     draw.text((5, 72), f"Reused: ", 0, font_9)
-
     draw.text((5, 82), f"Next: {_2_launch}", 0, font_9)  # And this will draw the next launch on the Image
 
     relative_image = os.path.join(os.path.dirname(__file__),"spacex.png")
@@ -158,9 +130,6 @@ while True:
 
     display.init()
     display.Clear() # Clearing the display
-
     display.display(display.getbuffer(image=image), display.getbuffer(image=red_image))  # Finaly draws the Black image on the E-Paper display
-
-
     display.sleep()  # Putting the display in sleep mode to reduce the power!
     time.sleep(MINUTES * 60) # Waits n Minute
